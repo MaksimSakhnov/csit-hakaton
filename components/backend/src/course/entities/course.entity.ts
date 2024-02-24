@@ -21,7 +21,7 @@ export class Course {
     @Column()
     repository: string
 
-    @ManyToMany((type)=>Teacher)
+    @ManyToMany((type)=>Teacher, (teacher)=>teacher.courses)
     @JoinTable()
     teachers: Teacher[]
 

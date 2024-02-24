@@ -25,15 +25,15 @@ export class Teacher {
     @Column()
     gitHandle: string
 
-    @ManyToMany((type) => Course)
-    @JoinTable()
-    courses: Course[]
-
     @CreateDateColumn()
     createdAt: Date
 
     @UpdateDateColumn()
     updatedAt: Date
+
+    @ManyToMany((type)=>Course)
+    @JoinTable()
+    courses: Course[]
 
     @ManyToOne((type)=>University, (university)=>university.teachers)
     university:University

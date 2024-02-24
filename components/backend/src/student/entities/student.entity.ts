@@ -18,7 +18,7 @@ export class Student {
     department: string
 
     @Column()
-    group: string
+    group: number
 
     @Column()
     email: string

@@ -31,7 +31,7 @@ export class TeacherService {
         password: hashedPassword,
         id_university: id_university,
         gitHandle: gitHandle,
-        courses: [],
+        // courses: [],
       })
 
       return user

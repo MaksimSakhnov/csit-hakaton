@@ -20,6 +20,6 @@ export class Task{
     @Column()
     max_points: number
 
-    @ManyToOne((type)=>Course, (course)=>course.tasks)
+    @ManyToOne((type)=>Course)
     course: Course
 }

@@ -22,7 +22,7 @@ export class SignUpDto {
     @IsString()
     readonly role: string;
 
-    readonly group: string;
+    readonly group: number;
 
     readonly gitHandle: string;
 
