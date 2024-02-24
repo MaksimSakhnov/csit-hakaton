@@ -11,7 +11,7 @@ services:
     volumes:
       - /custom/mount:/var/lib/postgresql/data
     ports:
-      - 127.0.0.1:5432:5432
+      - 127.0.0.1:5433:5433
     networks:
       - nest_test
     restart: unless-stopped
