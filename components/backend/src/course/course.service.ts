@@ -3,7 +3,7 @@ import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Course } from './entities/course.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { TeacherCourse } from 'src/teacher-course/entities/teacher-course.entity';
 
@@ -31,6 +31,13 @@ export class CourseService {
 
   public async findAll() {
     return await this.courseRepository.find({relations: {teachers: true}})
+  }
+
+  public async findByTeacher(teacher_id:number) {
+    console.log(teacher_id)
+    const courses = (await this.teacherCourseRepository.find({where:{teacherId:teacher_id},}))
+    .map(val=>val.courseId)
+    return await this.courseRepository.find({where: { id: In(courses)}, relations:{teachers:true}})
   }
 
   public async findOne(id: number) {
