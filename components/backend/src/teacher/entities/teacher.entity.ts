@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne } from "typeorm"
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn } from "typeorm"
 import { Course } from "src/course/entities/course.entity"
 import { University } from "src/university/entities/university.entity";
 import { TeacherCourse } from "src/teacher-course/entities/teacher-course.entity";
@@ -21,9 +21,6 @@ export class Teacher {
     password: string
 
     @Column()
-    id_university: number
-
-    @Column()
     gitHandle: string
 
     @CreateDateColumn()
@@ -32,9 +29,10 @@ export class Teacher {
     @UpdateDateColumn()
     updatedAt: Date
 
-    @ManyToMany(() => Course, (course)=>course.students)
-    courses?: Course[];
+    @ManyToMany((type) => Course)
+    courses?: Course[]
 
-    @ManyToOne((type)=>University, (university)=>university.teachers)
-    university:University
+    @ManyToOne((type) => University, (university) => university.teachers)
+    @JoinColumn({ name: 'universityId' })
+    university: University
 }

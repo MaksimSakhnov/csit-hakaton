@@ -24,7 +24,7 @@ export class UpdateTeacherDto extends PartialType(CreateTeacherDto) {
 
     @IsNotEmpty()
     @IsNumber()
-    id_university: number
+    universityId: number
 
     @IsNotEmpty()
     @IsString()

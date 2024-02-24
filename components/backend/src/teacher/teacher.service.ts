@@ -5,9 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Teacher } from './entities/teacher.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'
-import { PageOptionsDto } from 'src/pagesDtos/page-options.dto';
-import { PageDto } from 'src/pagesDtos/page.dto';
-import { PageMetaDto } from 'src/pagesDtos/page-meta.dto';
 
 @Injectable()
 export class TeacherService {
@@ -17,7 +14,7 @@ export class TeacherService {
   ) { }
 
   async create(createTeacherDto: CreateTeacherDto) {
-    const { firstName, lastName, password, email, gitHandle, id_university } = createTeacherDto
+    const { email, password, } = createTeacherDto
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -25,44 +22,33 @@ export class TeacherService {
       throw new BadRequestException('This email is taken');
     else {
       const user = this.teacherRepository.create({
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
+        ...createTeacherDto,
         password: hashedPassword,
-        id_university: id_university,
-        gitHandle: gitHandle,
-        // courses: [],
+        courses: [],
       })
 
       return await this.teacherRepository.save(user)
     }
   }
 
-  async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Teacher>> {
-    const queryBuilder = this.teacherRepository.createQueryBuilder('user');
-
-    queryBuilder
-      .orderBy('teacher.createdAt', pageOptionsDto.order)
-      .skip(pageOptionsDto.skip)
-      .take(pageOptionsDto.take);
-
-    const itemCount = await queryBuilder.getCount();
-    const { entities } = await queryBuilder.getRawAndEntities();
-
-    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
-
-    return new PageDto(entities, pageMetaDto);
+  async findAll(): Promise<Teacher[]> {
+    return await this.teacherRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} teacher`;
+  async findOne(id: number) {
+    return await this.teacherRepository.findOne({
+      where: { id }
+    })
   }
 
-  update(id: number, updateTeacherDto: UpdateTeacherDto) {
-    return `This action updates a #${id} teacher`;
+  async update(id: number, updateTeacherDto: UpdateTeacherDto) {
+    await this.teacherRepository.update({ id }, updateTeacherDto)
+    return await this.teacherRepository.findOne({
+      where: { id }
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} teacher`;
+  async remove(id: number) {
+    await this.teacherRepository.delete(id)
   }
 }

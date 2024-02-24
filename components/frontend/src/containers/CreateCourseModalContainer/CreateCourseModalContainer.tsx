@@ -1,5 +1,4 @@
 import { useForm} from "react-hook-form";
-import {CreateTeacherModal} from "../../components/CreateTeacherModal/CreateTeacherModal";
 import {ICreateCourse} from "../../store/admin/adminSlice.type";
 import {CreateCourseModalProps} from "./CreateCourseModal.type";
 import CreateCourseModal from "../../components/CreateCourseModal";
