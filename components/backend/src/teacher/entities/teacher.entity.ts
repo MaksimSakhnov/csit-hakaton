@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Course } from "src/course/entities/course.entity"
 
 @Entity('teachers')
 export class Teacher {
@@ -16,6 +17,16 @@ export class Teacher {
 
     @Column()
     password: string
+
+    @Column()
+    id_university: number
+
+    @Column()
+    gitHandle: string
+
+    @ManyToMany((type) => Course)
+    @JoinTable()
+    courses: Course[]
 
     @CreateDateColumn()
     createdAt: Date
