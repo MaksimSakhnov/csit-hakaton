@@ -1,30 +1,36 @@
-import {IsDate, IsEmail, IsString, IsNumber} from 'class-validator'
+import { IsDate, IsEmail, IsString, IsNumber, IsNotEmpty, MinLength } from 'class-validator'
 
 export class CreateStudentDto {
+    @IsNotEmpty()
     @IsString()
     firstName: string
 
+    @IsNotEmpty()
     @IsString()
     lastName: string
 
+    @IsNotEmpty()
     @IsString()
     department: string
 
+    @IsNotEmpty()
     @IsNumber()
-    group: string
+    group: number
 
+    @IsNotEmpty()
     @IsEmail()
     email: string
 
+    @IsNotEmpty()
     @IsString()
     gitHandle: string
 
+    @IsNotEmpty()
     @IsString()
+    @MinLength(6, { message: "Password must be more than 5 symbols" })
     password: string
 
-    @IsDate()
-    createdAt: Date
-
-    @IsDate()
-    updatedAt: Date
+    @IsNotEmpty()
+    @IsNumber()
+    universityId: number
 }

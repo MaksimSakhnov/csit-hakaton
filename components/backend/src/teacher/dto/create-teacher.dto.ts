@@ -25,5 +25,5 @@ export class CreateTeacherDto {
 
     @IsNotEmpty()
     @IsNumber()
-    id_university: number
+    universityId: number
 }

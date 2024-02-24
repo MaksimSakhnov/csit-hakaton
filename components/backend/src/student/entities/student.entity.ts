@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 
 import { Course } from "src/course/entities/course.entity";
 import { University } from "src/university/entities/university.entity";
@@ -29,16 +29,17 @@ export class Student {
     @Column()
     password: string
 
+    @ManyToMany((type) => Course)
+    @JoinTable()
+    courses: Course[]
+
+    @ManyToOne((type) => University, (university) => university.students,)
+    @JoinColumn({ name: 'universityId' })
+    university: University
+
     @CreateDateColumn()
     createdAt: Date
 
     @UpdateDateColumn()
     updatedAt: Date
-
-    @ManyToMany((type)=>Course)
-    @JoinTable()
-    courses: Course[]
-
-    @ManyToOne((type)=>University, (university)=>university.students)
-    university: University
 }
