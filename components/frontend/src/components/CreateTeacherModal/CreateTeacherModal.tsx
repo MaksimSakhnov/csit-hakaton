@@ -32,7 +32,7 @@ export function CreateTeacherModal({handleSubmit, onSubmit, open, register, clos
                     </div>
 
                     <div className={styles.item}>
-                        <TextField placeholder="git handler" {...register("gitHandler")} sx={{width: '100%'}}/>
+                        <TextField placeholder="git handler" {...register("gitHandle")} sx={{width: '100%'}}/>
                     </div>
 
                     <div className={styles.item}>
