@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { University } from "src/university/entities/university.entity";
 
 @Entity('teachers')
 export class Teacher {
@@ -22,4 +23,7 @@ export class Teacher {
 
     @UpdateDateColumn()
     updatedAt: Date
+
+    @ManyToOne((type)=>University, (university)=>university.teachers)
+    university:University
 }

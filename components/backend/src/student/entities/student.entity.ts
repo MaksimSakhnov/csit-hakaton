@@ -1,4 +1,7 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+
+import { Course } from "src/course/entities/course.entity";
+import { University } from "src/university/entities/university.entity";
 
 @Entity('students')
 export class Student {
@@ -31,4 +34,11 @@ export class Student {
 
     @UpdateDateColumn()
     updatedAt: Date
+
+    @ManyToMany((type)=>Course)
+    @JoinTable()
+    courses: Course[]
+
+    @ManyToOne((type)=>University, (university)=>university.students)
+    university: University
 }
