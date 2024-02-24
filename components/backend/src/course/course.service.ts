@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -39,11 +39,21 @@ export class CourseService {
     return await this.courseRepository.find({where: { id: In(courses)}, relations:{teachers:true}})
   }
 
-  public async findOne(id: number) {
-    return await this.courseRepository.findOne({
-      where: { id },
-      relations: {teachers: true}
-    })
+  public async findOne(id: number, teacher?: number) {
+    if (!teacher) {
+      return await this.courseRepository.findOne({
+        where: { id },
+        relations: {teachers: true}
+      })
+    }
+    else {
+      const tc = await this.teacherCourseRepository.find({where:{courseId:id, teacherId:teacher}})
+      if (tc.length) {return await this.courseRepository.findOne({
+        where: { id },
+        relations: {teachers: true}
+      }); }
+      else {throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);}
+    }
   }
 
   public async update(id: number, updateCourseDto: UpdateCourseDto) {
