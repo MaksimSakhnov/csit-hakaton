@@ -21,7 +21,7 @@ export class TeacherService {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    if (this.teacherRepository.findOne({ where: { email: email }, }))
+    if (await this.teacherRepository.findOne({ where: { email: email }, }))
       throw new BadRequestException('This email is taken');
     else {
       const user = this.teacherRepository.create({
@@ -34,7 +34,7 @@ export class TeacherService {
         // courses: [],
       })
 
-      return user
+      return await this.teacherRepository.save(user)
     }
   }
 
