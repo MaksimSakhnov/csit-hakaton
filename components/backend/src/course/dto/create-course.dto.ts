@@ -1,4 +1,4 @@
-import {IsNotEmpty, IsString} from 'class-validator';
+import {IsArray, IsNotEmpty, IsString} from 'class-validator';
 
 export class CreateCourseDto {
     @IsNotEmpty()
@@ -16,4 +16,7 @@ export class CreateCourseDto {
     @IsNotEmpty()
     @IsString()
     repository: string
+
+    @IsArray()
+    teachers:number[]
 }

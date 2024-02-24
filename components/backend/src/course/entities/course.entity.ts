@@ -1,8 +1,9 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToMany, JoinTable, OneToMany } from "typeorm";
+import { PrimaryGeneratedColumn, Column, Entity, ManyToMany, JoinTable, OneToMany, RelationId, PrimaryColumnCannotBeNullableError } from "typeorm";
 
 import { Teacher } from "src/teacher/entities/teacher.entity";
 import { Student } from "src/student/entities/student.entity";
 import { Task } from "src/task/entities/task.entity";
+import { TeacherCourse } from "src/teacher-course/entities/teacher-course.entity";
 
 @Entity('courses')
 export class Course {
@@ -21,14 +22,21 @@ export class Course {
     @Column()
     repository: string
 
-    @ManyToMany((type)=>Teacher, (teacher)=>teacher.courses)
-    @JoinTable()
-    teachers: Teacher[]
+    @ManyToMany(() => Teacher)
+    @JoinTable({name:"teacher_course",
+    joinColumn: {
+        name: 'course_id',
+        referencedColumnName: 'id',
+      },
+      inverseJoinColumn: {
+        name: 'teacher_id',
+        referencedColumnName: 'id',
+      },})
+    teachers?: Teacher[];
 
     @ManyToMany((type)=>Student)
-    @JoinTable()
-    students:Student[]
+    students:Promise<Student[]>
 
     @OneToMany((type)=>Task, (task)=>task.course)
-    tasks: Task[]
+    tasks: Promise<Task[]>
 }

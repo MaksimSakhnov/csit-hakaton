@@ -20,7 +20,7 @@ export class Task{
     @Column()
     max_points: number
 
-    @ManyToOne((type)=>Course)
+    @ManyToOne((type)=>Course, {eager: true})
     @JoinColumn({name:"courseId"})
     course: Course
 }

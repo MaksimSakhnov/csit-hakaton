@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule as NestTypeOrmModule } from '@nestjs/typeorm';
 import * as process from 'process';
-import { Course } from 'src/course/entities/course.entity';
-import { Teacher } from 'src/teacher/entities/teacher.entity';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();

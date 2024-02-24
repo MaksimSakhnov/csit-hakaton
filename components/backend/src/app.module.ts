@@ -10,6 +10,7 @@ import { TeacherModule } from './teacher/teacher.module';
 import { CourseModule } from './course/course.module';
 import { UniversityModule } from './university/university.module';
 import { TaskModule } from './task/task.module';
+import { TeacherCourseModule } from './teacher-course/teacher-course.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { TaskModule } from './task/task.module';
     TeacherModule,
     CourseModule,
     UniversityModule,
-    TaskModule
+    TaskModule,
+    TeacherCourseModule
   ],
   controllers: [AppController],
   providers: [AppService],

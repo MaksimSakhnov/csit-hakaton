@@ -5,30 +5,45 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Course } from './entities/course.entity';
 import { Repository } from 'typeorm';
 
+import { TeacherCourse } from 'src/teacher-course/entities/teacher-course.entity';
 
 @Injectable()
 export class CourseService {
   constructor(
     @InjectRepository(Course) private readonly courseRepository: Repository<Course>,
+    @InjectRepository(TeacherCourse) private readonly teacherCourseRepository: Repository<TeacherCourse>
   ) {}
 
   public async create(createCourseDto: CreateCourseDto) {
-    const newCourse = this.courseRepository.create(createCourseDto)
-    return await this.courseRepository.save(newCourse)
+    const {name, description, password, repository, teachers} = createCourseDto
+    const newCourse = await this.courseRepository.save(this.courseRepository.create(
+      {name:name, description:description, password:password, repository:repository})
+    )
+    teachers.forEach(async tid => 
+      await this.teacherCourseRepository.save(this.teacherCourseRepository.create({courseId:newCourse.id, teacherId:tid}))
+      )
+    await this.courseRepository.save(newCourse)
+    return await this.courseRepository.find({
+      where: { id: newCourse.id },
+      relations: {teachers: true}
+    })
   }
 
   public async findAll() {
-    return await this.courseRepository.find()
+    return await this.courseRepository.find({relations: {teachers: true}})
   }
 
   public async findOne(id: number) {
     return await this.courseRepository.findOne({
-      where: { id }
+      where: { id },
+      relations: {teachers: true}
     })
   }
 
   public async update(id: number, updateCourseDto: UpdateCourseDto) {
-    await this.courseRepository.update({ id }, updateCourseDto)
+    const {name, description, password, repository, teachers} = updateCourseDto
+    await this.courseRepository.update({ id }, 
+      {name:name, description : description, password: password, repository:repository})
     return await this.courseRepository.findOne({
       where: { id }
     })

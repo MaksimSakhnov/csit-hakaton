@@ -1,6 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateCourseDto } from './create-course.dto';
-import { IsNotEmpty, IsString, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsArray } from 'class-validator';
 
 export class UpdateCourseDto extends PartialType(CreateCourseDto) {
     @IsNotEmpty()
@@ -18,4 +18,7 @@ export class UpdateCourseDto extends PartialType(CreateCourseDto) {
     @IsNotEmpty()
     @IsString()
     repository: string
+
+    @IsArray()
+    teachers:number[]
 }
