@@ -1,10 +1,15 @@
 import './App.css'
-import { RouterProvider } from 'react-router-dom'
-import { router } from './router/router'
+import {Route, Routes } from 'react-router-dom'
+import {ADMIN} from "./routes/route";
+import PageAdmin from "./pages/PageAdmin";
 
 function App() {
 
-  return <RouterProvider router={router} />
+  return <Routes>
+    <Route path={ADMIN} element={<PageAdmin />} />
+
+  </Routes>
+
 }
 
 export default App
