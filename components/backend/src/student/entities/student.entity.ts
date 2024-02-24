@@ -29,9 +29,17 @@ export class Student {
     @Column()
     password: string
 
-    @ManyToMany((type) => Course)
-    @JoinTable()
-    courses: Course[]
+    @ManyToMany(() => Course)
+    @JoinTable({name:"student_course",
+    joinColumn: {
+        name: 'student_id',
+        referencedColumnName: 'id',
+      },
+      inverseJoinColumn: {
+        name: 'course_id',
+        referencedColumnName: 'id',
+      },})
+    courses?: Course[];
 
     @ManyToOne((type) => University, (university) => university.students,)
     @JoinColumn({ name: 'universityId' })

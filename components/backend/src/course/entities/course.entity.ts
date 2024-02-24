@@ -3,7 +3,6 @@ import { PrimaryGeneratedColumn, Column, Entity, ManyToMany, JoinTable, OneToMan
 import { Teacher } from "src/teacher/entities/teacher.entity";
 import { Student } from "src/student/entities/student.entity";
 import { Task } from "src/task/entities/task.entity";
-import { TeacherCourse } from "src/teacher-course/entities/teacher-course.entity";
 
 @Entity('courses')
 export class Course {
@@ -34,9 +33,9 @@ export class Course {
       },})
     teachers?: Teacher[];
 
-    @ManyToMany((type)=>Student)
-    students:Promise<Student[]>
+    @ManyToMany(() => Student)
+    students?: Student[];
 
     @OneToMany((type)=>Task, (task)=>task.course)
-    tasks: Promise<Task[]>
+    tasks?: Task[]
 }
