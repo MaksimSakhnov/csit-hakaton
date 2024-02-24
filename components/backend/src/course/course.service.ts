@@ -34,7 +34,6 @@ export class CourseService {
   }
 
   public async findByTeacher(teacher_id:number) {
-    console.log(teacher_id)
     const courses = (await this.teacherCourseRepository.find({where:{teacherId:teacher_id},}))
     .map(val=>val.courseId)
     return await this.courseRepository.find({where: { id: In(courses)}, relations:{teachers:true}})
