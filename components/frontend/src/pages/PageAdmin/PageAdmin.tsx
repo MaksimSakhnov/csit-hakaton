@@ -10,6 +10,7 @@ import {PlusOutlined} from "@ant-design/icons";
 import StudentsTableContainer from "../../containers/StudentsTableContainer";
 import CreateStudentModalContainer from "../../containers/CreateStudentModalContainer";
 import {CoursesTableContainer} from "../../containers/CoursesTableContainer/CoursesTableContainer";
+import {CreateCourseModalContainer} from "../../containers/CreateCourseModalContainer/CreateCourseModalContainer";
 
 
 export function PageAdmin() {
@@ -70,6 +71,8 @@ export function PageAdmin() {
 
             <CreateStudentModalContainer open={isModalOpen ? isModalOpen === PageAdminContentEnum.STUDENTS : false}
                                          closeWindow={closeWindow}/>
+            <CreateCourseModalContainer open={isModalOpen ? isModalOpen === PageAdminContentEnum.COURSES : false}
+                                            closeWindow={closeWindow} />
         </Layout>
     )
 }

@@ -42,13 +42,17 @@ export interface ICreateTeacher {
 
 export interface ICourse {
     id: number;
-
     name: string;
-
     description: string;
-
     password: string;
-
     repository: string;
     teachers: number[];
+}
+
+export interface ICreateCourse {
+    name: string;
+    description: string;
+    password: string;
+    repository: string;
+    teachers: string;
 }
