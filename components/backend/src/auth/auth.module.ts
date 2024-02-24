@@ -28,6 +28,7 @@ import { JwtStrategy } from './jwt.strategy';
     TypeOrmModule.forFeature([Teacher]),
     TypeOrmModule.forFeature([Student]),
   ],
+  controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
   exports: [JwtStrategy, PassportModule]
 })

@@ -1,11 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query } from '@nestjs/common';
 import { TeacherService } from './teacher.service';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
+import { PageOptionsDto } from 'src/pagesDtos/page-options.dto';
+import { PageDto } from 'src/pagesDtos/page.dto';
+import { Teacher } from './entities/teacher.entity';
 
-@Controller('teacher')
+@Controller('teachers')
 export class TeacherController {
-  constructor(private readonly teacherService: TeacherService) {}
+  constructor(private readonly teacherService: TeacherService) { }
 
   @Post()
   create(@Body() createTeacherDto: CreateTeacherDto) {
@@ -13,8 +16,10 @@ export class TeacherController {
   }
 
   @Get()
-  findAll() {
-    return this.teacherService.findAll();
+  findAll(
+    @Query() pageOptionsDto: PageOptionsDto,
+  ): Promise<PageDto<Teacher>> {
+    return this.teacherService.findAll(pageOptionsDto);
   }
 
   @Get(':id')
@@ -22,8 +27,12 @@ export class TeacherController {
     return this.teacherService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTeacherDto: UpdateTeacherDto) {
+  @Put(':id')
+  update(
+    @Param('id')
+    id: string,
+    @Body()
+    updateTeacherDto: UpdateTeacherDto) {
     return this.teacherService.update(+id, updateTeacherDto);
   }
 
