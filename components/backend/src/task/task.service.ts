@@ -26,8 +26,8 @@ export class TaskService {
     })
   }
 
-  public async update(id: number, updateTeacherDto: UpdateTaskDto) {
-    await this.taskRepository.update({ id }, updateTeacherDto)
+  public async update(id: number, updateTaskDto: UpdateTaskDto) {
+    await this.taskRepository.update({ id }, updateTaskDto)
     return await this.taskRepository.findOne({
       where: { id }
     })

@@ -12,4 +12,7 @@ export class CreateTaskDto {
 
     @IsNumber()
     max_points: number
+
+    @IsNumber()
+    courseId: number
 }
