@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn } from "typeorm"
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn, OneToMany } from "typeorm"
 import { Course } from "src/course/entities/course.entity"
 import { University } from "src/university/entities/university.entity";
 import { TeacherCourse } from "src/teacher-course/entities/teacher-course.entity";
+import { Attempt } from "src/attempt/entities/attempt.entity";
 
 @Entity('teachers')
 export class Teacher {
@@ -23,11 +24,8 @@ export class Teacher {
     @Column()
     gitHandle: string
 
-    @CreateDateColumn()
-    createdAt: Date
-
-    @UpdateDateColumn()
-    updatedAt: Date
+    @OneToMany((type) => Attempt, (attempt) => attempt.task)
+    attempts?: Attempt[]
 
     @ManyToMany((type) => Course)
     courses?: Course[]
@@ -35,4 +33,10 @@ export class Teacher {
     @ManyToOne((type) => University, (university) => university.teachers)
     @JoinColumn({ name: 'universityId' })
     university: University
+
+    @CreateDateColumn()
+    createdAt: Date
+
+    @UpdateDateColumn()
+    updatedAt: Date
 }

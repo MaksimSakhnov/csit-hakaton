@@ -1,10 +1,11 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 
 import { Course } from 'src/course/entities/course.entity';
+import { Attempt } from 'src/attempt/entities/attempt.entity';
 
 
 @Entity('tasks')
-export class Task{
+export class Task {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -20,7 +21,10 @@ export class Task{
     @Column()
     max_points: number
 
-    @ManyToOne((type)=>Course, {eager: true})
-    @JoinColumn({name:"courseId"})
+    @OneToMany((type) => Attempt, (attempt) => attempt.task)
+    attempts?: Attempt[]
+
+    @ManyToOne((type) => Course, { eager: true })
+    @JoinColumn({ name: "courseId" })
     course: Course
 }
