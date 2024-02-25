@@ -1,15 +1,29 @@
-import {Button, Divider, Layout, List, Menu, MenuProps, Modal, theme, Typography} from "antd";
-import {EditOutlined, EyeOutlined, FileOutlined, LaptopOutlined, NotificationOutlined, UserOutlined} from "@ant-design/icons";
+import {Button, Divider, Input, Layout, List, Menu, MenuProps, Modal, theme, Typography} from "antd";
+import {
+    EditOutlined,
+    EyeOutlined,
+    FileOutlined,
+    LaptopOutlined,
+    NotificationOutlined,
+    UserOutlined
+} from "@ant-design/icons";
 import {createElement, useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {Content, Header} from "antd/es/layout/layout";
 import {useAppDispatch} from "../../store/hooks";
-import {getCurrentCourse, getStudentsForCourse, getTasksForCourse} from "../../store/app/requests";
+import {checkCollaborator, getCurrentCourse, getStudentsForCourse, getTasksForCourse} from "../../store/app/requests";
 import {useSelector} from "react-redux";
-import {selectCurrentCourse, selectStudentsForCourse, selectTasksForCourse} from "../../store/app/selectors";
+import {
+    selectCurrentCourse, selectIsCorrectCollaborator, selectIsLoading,
+    selectRole,
+    selectStudentsForCourse,
+    selectTasksForCourse,
+    selectUserData
+} from "../../store/app/selectors";
 import styles from './PageCourse.module.scss'
 import Sider from "antd/es/layout/Sider";
 import {appActions} from "../../store/app/actions";
+import {appRole} from "../../store/app/appSlice.type";
 
 const {Title, Text} = Typography;
 
@@ -42,8 +56,14 @@ export function PageCourse() {
     const studentsData = useSelector(selectStudentsForCourse)
     const tasks = useSelector(selectTasksForCourse)
     const {id} = useParams();
-
+    const userData = useSelector(selectUserData)
+    const userRole = useSelector(selectRole)
     const [isUsersModalOpen, setIsUsersModalOpen] = useState<boolean>(false)
+    const [isOpenRegisterModal, setIsOpenRegisterModal] = useState<boolean>(false)
+    const [coursePassword, setCoursePassword] = useState<string>('')
+    const isLoading = useSelector(selectIsLoading)
+    const isCorrectCollaborator = useSelector(selectIsCorrectCollaborator)
+
 
     const {
         token: {colorBgContainer, borderRadiusLG},
@@ -59,13 +79,23 @@ export function PageCourse() {
         setIsUsersModalOpen(false)
     }
 
+    const closeRegisterModal = () => {
+        setCoursePassword('')
+        setIsOpenRegisterModal(false)
+    }
+
+    const checkColaborator = ()=>{
+        if(userData && id)
+        dispatch(checkCollaborator({userId: userData.id, courseId: Number(id)}))
+    }
+
     const subNavItems = [
         {
             key: 'people',
             icon: <UserOutlined/>,
             label: <Text onClick={openUsersModal}>Студенты</Text>,
         },
-        {
+        userRole === appRole.TEACHER && {
             key: 'attempts',
             icon: <EyeOutlined/>,
             label: 'Попытки'
@@ -81,17 +111,27 @@ export function PageCourse() {
 
     ];
 
+    const getUserId = (): number | undefined => {
+        if (userRole === appRole.STUDENT) {
+            if (userData) {
+                return userData.id
+            }
+        }
+        return undefined
+    }
+
 
     useEffect(() => {
         if (id) {
-            dispatch(getCurrentCourse(Number(id)))
+            dispatch(getCurrentCourse({courseId: Number(id), userId: getUserId(), role: userRole === appRole.STUDENT ? 's' : 't'}))
             dispatch(getTasksForCourse(Number(id)))
         }
     }, [id]);
 
+
     return <Layout style={{minHeight: '100vh', height: '100%'}}>
 
-        <Modal title="Basic Modal" open={isUsersModalOpen} onOk={closeUsersModal} onCancel={closeUsersModal}>
+        <Modal title="Ученики на курсе" open={isUsersModalOpen} onOk={closeUsersModal} onCancel={closeUsersModal}>
             <List
                 itemLayout="horizontal"
                 dataSource={studentsData ?? undefined}
@@ -104,6 +144,21 @@ export function PageCourse() {
                     </List.Item>
                 )}
             />
+        </Modal>
+
+
+        <Modal title="Записаться на курс" open={isOpenRegisterModal} onCancel={closeRegisterModal} footer={[
+            <Button>Записаться</Button>
+        ]} >
+            <div className={styles.register_modal}>
+                <div className={styles.item}>
+                    <Input placeholder={'Пароль от курса'} onChange={(e)=>setCoursePassword((e.target.value))} value={coursePassword}></Input>
+
+                </div>
+                <div className={styles.item}>
+                    <Button loading={isLoading} danger={!isCorrectCollaborator} disabled={isCorrectCollaborator} onClick={checkColaborator}>{isCorrectCollaborator ? 'OK' : 'Проверить контрибьютора'}</Button>
+                </div>
+            </div>
         </Modal>
 
         <Header style={{display: 'flex', alignItems: 'center'}}>
@@ -125,16 +180,33 @@ export function PageCourse() {
                         defaultSelectedKeys={['1']}
                         defaultOpenKeys={['sub1']}
                         style={{height: '100%'}}
+                        // @ts-ignore
                         items={subNavItems}
                     />
                 </Sider>
                 {!courseData && <div>NOT FOUND</div>}
                 {courseData &&
                     <div className={styles.course_info}>
-                        <div className={styles.actions}>
-                            <Button type="primary" size={"small"} shape={'circle'}
-                                    disabled={true}><EditOutlined/></Button>
-                        </div>
+
+                        {
+                            userRole === appRole.TEACHER && (
+                                <div className={styles.actions}>
+                                    <Button type="primary" size={"small"} shape={'circle'}
+                                            disabled={true}><EditOutlined/></Button>
+                                </div>
+                            )
+
+                        }
+
+                        {
+
+                            userRole === appRole.STUDENT && !courseData.isMy && (
+                                <div className={styles.actions}>
+                                    <Button type="primary" size={"small"} shape={'round'} onClick={()=>setIsOpenRegisterModal(true)}>Записаться</Button>
+                                </div>
+                            )
+                        }
+
                         <div className={styles.content}>
                             <Title>{courseData.name}</Title>
                             <Divider/>
@@ -149,8 +221,9 @@ export function PageCourse() {
                                 renderItem={(item) => (
                                     <List.Item>
                                         <List.Item.Meta
-                                            avatar={<FileOutlined />}
-                                            title={<Link to={`/tasks/${item.id}`}>{item.name + ' ' + item.max_points + ' баллов'}</Link>}
+                                            avatar={<FileOutlined/>}
+                                            title={<Link
+                                                to={`/tasks/${item.id}`}>{item.name + ' ' + item.max_points + ' баллов'}</Link>}
                                             description={item.description.substring(0, 20) + '...'}
                                         />
                                     </List.Item>

@@ -11,6 +11,13 @@
     background-color: white;
     padding: 2%;
     border-radius: 10px;
+    .select_role{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
     .item{
       margin-bottom: 30px;
     }

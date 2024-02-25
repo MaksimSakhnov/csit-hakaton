@@ -1,12 +1,14 @@
 import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons';
 import type {MenuProps} from 'antd';
-import {Layout, List, Menu, theme} from 'antd';
+import {Button, Layout, List, Menu, theme} from 'antd';
 import {createElement, useEffect, useState} from "react";
 import {useAppDispatch} from "../../store/hooks";
 import {getCourses} from "../../store/app/requests";
 import {useSelector} from "react-redux";
-import {selectCourses} from "../../store/app/selectors";
+import {selectCourses, selectUserData} from "../../store/app/selectors";
 import { Link } from 'react-router-dom';
+import styles from './PageMain.module.scss'
+import {appActions} from "../../store/app/actions";
 
 const {Header, Content, Footer, Sider} = Layout;
 
@@ -49,6 +51,7 @@ export function PageMain() {
 
     const dispatch = useAppDispatch()
     const coursesData = useSelector(selectCourses)
+    const userData = useSelector(selectUserData)
 
     const [page, setPage] = useState<'all' | 'my'>('all');
 
@@ -58,10 +61,13 @@ export function PageMain() {
         }
     }, [page]);
 
+    const onLogout = ()=>{
+        dispatch(appActions.setUserData(null))
+    }
+
 
     return <Layout style={{minHeight: '100vh', height: '100%'}}>
         <Header style={{display: 'flex', alignItems: 'center'}}>
-            <div className="demo-logo"/>
             <Menu
                 theme="dark"
                 mode="horizontal"
@@ -70,6 +76,10 @@ export function PageMain() {
                 items={items1}
                 style={{flex: 1, minWidth: 0}}
             />
+            <div className={styles.profile}>
+                <label>{userData && (userData.firstName + ' ' + userData.lastName)}</label>
+                <Button onClick={onLogout}>Выход</Button>
+            </div>
         </Header>
         <Content style={{padding: '0 48px'}}>
 

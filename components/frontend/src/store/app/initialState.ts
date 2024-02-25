@@ -8,5 +8,8 @@ export const appInitialState = {
     currentCourse: null as null | IDetailCourse,
     studentsForCourse: null as null | IStudent[],
     tasksForCourse: null as null | ITask[],
+    userData: null as null | ILoginAdminResponse,
+    isCorrectColaborator: false,
+    isLoading: false,
 
 }

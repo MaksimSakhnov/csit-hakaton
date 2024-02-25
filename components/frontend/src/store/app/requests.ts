@@ -1,5 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {teacherApi} from "../../api/teacherApi";
+import {IUserLoginData} from "../../types/userTypes";
 
 
 
@@ -20,9 +21,9 @@ const getCourses = createAsyncThunk(
 
 const getCurrentCourse = createAsyncThunk(
     'app/getCurrentCourse',
-    async (courseId: number) => {
-        const data = await teacherApi.getCurrentCourse(courseId)
-        return data
+    async (data: {courseId: number, userId?: number, role?: string}) => {
+        const result = await teacherApi.getCurrentCourse(data.courseId, data.userId, data.role)
+        return result
     },
 );
 
@@ -43,6 +44,25 @@ const getTasksForCourse = createAsyncThunk(
     }
 )
 
+const checkCollaborator = createAsyncThunk(
+    'app/checkCollaborator', async (data: {userId: number, courseId: number}) => {
+        const result = await teacherApi.checkColaborator(data.userId, data.courseId);
+        return result
+    }
+)
+
+const login = createAsyncThunk(
+    'app/login', async (temp : {data: IUserLoginData, role: 'STUDENT' | 'TEACHER'
+}) => {
+        const result = await teacherApi.login(temp.data);
+        if (result){
+            localStorage.setItem('userData', JSON.stringify(result))
+            localStorage.setItem('userRole', JSON.stringify(temp.role))
+        }
+        return {result: result, role: temp.role}
+    }
+)
 
 
-export {getCourses, getCurrentCourse, getStudentsForCourse, getTasksForCourse}
+
+export {getCourses, getCurrentCourse, getStudentsForCourse, getTasksForCourse, login, checkCollaborator}
