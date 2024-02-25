@@ -56,7 +56,7 @@ export class StudentService {
 
       return true
     } catch (error) {
-      throw new BadRequestException(repositoryName)
+      throw new BadRequestException('Collaborator not found your repository')
     }
   }
 
