@@ -3,6 +3,7 @@ import {ITeacher} from "../admin/adminSlice.type";
 export enum appRole  {
     STUDENT = 'STUDENT',
     TEACHER = 'TEACHER',
+    ADMIN = 'ADMIN',
 }
 
 export interface ICourse {

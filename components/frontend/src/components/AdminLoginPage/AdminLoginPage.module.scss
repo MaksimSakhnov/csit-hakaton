@@ -1,0 +1,18 @@
+.form_wrapper{
+  width: 100vw;
+  height: 100vh;
+  background-color: #F5F5F5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .form{
+    width: 600px;
+    background-color: white;
+    padding: 2%;
+    border-radius: 10px;
+    .item{
+      margin-bottom: 30px;
+    }
+  }
+}

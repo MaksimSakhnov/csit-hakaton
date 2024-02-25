@@ -1,13 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit"
+import {createSlice, PayloadAction} from "@reduxjs/toolkit"
 import {adminInitialState} from "./initialState";
-import {createCourses, createStudent, createTeacher, getCourses, getStudents, getTeachers} from "./requests";
+import {
+    createCourses,
+    createStudent,
+    createTeacher,
+    getCourses,
+    getStudents,
+    getTeachers,
+    loginAdmin
+} from "./requests";
+import {ILoginAdminResponse} from "./adminSlice.type";
 
 
 
-export const adminSlice = createSlice({
+const adminSlice = createSlice({
     name: 'admin',
     initialState: adminInitialState,
     reducers: {
+        setAdminData: (state, action: PayloadAction<ILoginAdminResponse>)=>{
+
+        }
 
     },
     extraReducers: builder => {
@@ -34,8 +46,11 @@ export const adminSlice = createSlice({
         builder.addCase(createCourses.fulfilled, (state, action)=>{
             state.coursesData = action.payload
         })
+        builder.addCase(loginAdmin.fulfilled, (state, action)=>{
+            state.adminData = action.payload;
+        })
     }
 })
 
 
-export default adminSlice.reducer
+export default adminSlice

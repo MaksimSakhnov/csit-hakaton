@@ -1,6 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {AdminApi} from "../../api/adminApi";
-import {ICreateCourse, ICreateStudent, ICreateTeacher} from "./adminSlice.type";
+import {ICreateCourse, ICreateStudent, ICreateTeacher, ILoginAdmin} from "./adminSlice.type";
 
 const getTeachers = createAsyncThunk(
     'admin/getTeachers',
@@ -61,5 +61,14 @@ const createCourses = createAsyncThunk(
     },
 );
 
+const loginAdmin = createAsyncThunk(
+    'admin/loginAdmin',
+    async (data: ILoginAdmin) => {
+        const result = await AdminApi.login(data);
 
-export {getTeachers, getStudents, getCourses, createTeacher, createCourses, createStudent}
+        return result;
+    },
+);
+
+
+export {getTeachers, getStudents, getCourses, createTeacher, createCourses, createStudent, loginAdmin}
