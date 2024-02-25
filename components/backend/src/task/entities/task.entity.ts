@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn} from 'typeorm';
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, RelationId} from 'typeorm';
 
 import { Course } from 'src/course/entities/course.entity';
 
@@ -20,7 +20,7 @@ export class Task{
     @Column()
     max_points: number
 
-    @ManyToOne((type)=>Course, {eager: true})
+    @ManyToOne(()=>Course, {cascade:true, eager:true})
     @JoinColumn({name:"courseId"})
-    course: Course
+    course:Course
 }

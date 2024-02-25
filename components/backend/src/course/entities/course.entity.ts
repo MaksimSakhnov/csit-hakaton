@@ -1,4 +1,4 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToMany, JoinTable, OneToMany, RelationId, PrimaryColumnCannotBeNullableError } from "typeorm";
+import { PrimaryGeneratedColumn, Column, Entity, ManyToMany, JoinTable, OneToMany, RelationId, PrimaryColumnCannotBeNullableError, JoinColumn } from "typeorm";
 
 import { Teacher } from "src/teacher/entities/teacher.entity";
 import { Student } from "src/student/entities/student.entity";
@@ -37,5 +37,6 @@ export class Course {
     students?: Student[];
 
     @OneToMany((type)=>Task, (task)=>task.course)
+    @JoinColumn({name:'id'})
     tasks?: Task[]
 }

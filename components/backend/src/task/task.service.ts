@@ -13,11 +13,17 @@ export class TaskService {
 
   public async create(createTaskDto: CreateTaskDto) {
     const newTask = this.taskRepository.create(createTaskDto)
-    return await this.taskRepository.save(newTask)
+    const id = (await this.taskRepository.save(newTask)).id
+    return await this.taskRepository.findOne({
+    where: {id: id}})
   }
 
   public async findAll() {
-    return await this.taskRepository.find()
+      return await this.taskRepository.find();
+  }
+
+  public async findByCourse(course_id:number) {
+    return await this.taskRepository.find({where: {course:{id:course_id}}})
   }
 
   public async findOne(id: number) {
