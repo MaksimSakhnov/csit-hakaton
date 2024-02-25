@@ -5,12 +5,17 @@ import * as bcrypt from 'bcrypt'
 import { InjectRepository } from '@nestjs/typeorm';
 import { Student } from './entities/student.entity';
 import { Repository } from 'typeorm';
+import { Course } from 'src/course/entities/course.entity';
+import { Octokit } from 'octokit';
+import { MasterAccountToken } from 'src/constants/masterAccount';
 
 @Injectable()
 export class StudentService {
   constructor(
     @InjectRepository(Student)
-    private readonly studentRepository: Repository<Student>  
+    private readonly studentRepository: Repository<Student>,
+    @InjectRepository(Course)
+    private readonly courseRepository: Repository<Course>,
   ) { }
 
   async create(createStudentDto: CreateStudentDto) {
@@ -27,6 +32,31 @@ export class StudentService {
       })
 
       return await this.studentRepository.save(user)
+    }
+  }
+
+  async findCollaborator(id: number, course_id: number) {
+    const user = await this.studentRepository.findOne({
+      where: { id }
+    })
+
+    const course = await this.courseRepository.findOne({
+      where: { id: course_id }
+    })
+
+    const userHandle = user.gitHandle
+    const repositoryName = course.name
+    const octokit = new Octokit({ auth: MasterAccountToken });
+
+    try {
+      const res = await octokit.request('GET /repos/{owner}/{repo}/commits', {
+        owner: userHandle,
+        repo: repositoryName,
+      })
+
+      return true
+    } catch (error) {
+      throw new BadRequestException(repositoryName)
     }
   }
 

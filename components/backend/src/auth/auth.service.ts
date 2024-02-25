@@ -85,6 +85,7 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto): Promise<{
+    id: number
     firstName: string
     lastName: string
     email: string
@@ -120,6 +121,7 @@ export class AuthService {
     const token = this.jwtService.sign({ id: user._id });
 
     return {
+      id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
