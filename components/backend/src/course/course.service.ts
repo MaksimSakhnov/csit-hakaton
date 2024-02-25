@@ -7,7 +7,8 @@ import { In, Repository } from 'typeorm';
 
 import { TeacherCourse } from 'src/teacher-course/entities/teacher-course.entity';
 import { StudentCourse } from 'src/student-course/entities/student-course.entity';
-import { Student } from 'src/student/entities/student.entity';
+import { Teacher } from 'src/teacher/entities/teacher.entity';
+import { Task } from 'src/task/entities/task.entity';
 
 @Injectable()
 export class CourseService {
@@ -18,8 +19,10 @@ export class CourseService {
     private readonly teacherCourseRepository: Repository<TeacherCourse>,
     @InjectRepository(StudentCourse)
     private readonly studentCourseRepository: Repository<StudentCourse>,
-    @InjectRepository(Student)
-    private readonly studentRepository: Repository<Student>,
+    @InjectRepository(Task)
+    private readonly taskRepository: Repository<Task>,
+    @InjectRepository(Teacher)
+    private readonly teacherRepository: Repository<Teacher>
   ) { }
 
   public async create(createCourseDto: CreateCourseDto) {
@@ -49,26 +52,34 @@ export class CourseService {
   public async findByTeacher(teacher_id: number) {
     const courses = (await this.teacherCourseRepository.find({ where: { teacherId: teacher_id }, }))
       .map(val => val.courseId)
-    return await this.courseRepository.find({ where: { id: In(courses) }, relations: { teachers: true } })
+     await this.courseRepository.find({ where: { id: In(courses) }, relations: { teachers: true } })
   }
 
-  public async findOne(id: number, teacher?: number) {
-    if (!teacher) {
-      return await this.courseRepository.findOne({
-        where: { id },
-        relations: { teachers: true }
-      })
+  public async findMy(id: number, userid: number, role:string) {
+    if (role == 's') {
+      const rel = await this.studentCourseRepository.findOne({where:{studentId:userid, courseId:id}})
+      const c = await this.courseRepository.findOne({where:{id}, relations:{teachers:true, tasks:true}})
+      if (rel) {
+        console.log(rel);
+        return {...c, 'isMy':true}
+      }
+      else
+        return {...c, 'isMy':false}
     }
     else {
-      const tc = await this.teacherCourseRepository.find({ where: { courseId: id, teacherId: teacher } })
-      if (tc.length) {
-        return await this.courseRepository.findOne({
-          where: { id },
-          relations: { teachers: true }
-        });
+      const rel = await this.teacherCourseRepository.findOne({where:{teacherId:userid, courseId:id}})
+      const c = await this.courseRepository.findOne({where:{id}, relations:{teachers:true, tasks:true}})
+      if (rel){
+        return {...c, 'isMy':true}
       }
-      else { throw new HttpException('Forbidden', HttpStatus.FORBIDDEN); }
+      else
+        return {...c, 'isMy':false}
     }
+  }
+
+  public async findOne(id:number) {
+    return await this.courseRepository.findOne({where:{id}, relations:{teachers:true, tasks:true}})
+
   }
 
   public async update(id: number, updateCourseDto: UpdateCourseDto) {

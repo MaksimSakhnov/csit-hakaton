@@ -7,10 +7,10 @@ import { TeacherService } from 'src/teacher/teacher.service';
 import { Teacher } from 'src/teacher/entities/teacher.entity';
 import { TeacherCourse } from 'src/teacher-course/entities/teacher-course.entity';
 import { StudentCourse } from 'src/student-course/entities/student-course.entity';
-import { Student } from 'src/student/entities/student.entity';
+import { Task } from 'src/task/entities/task.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Course, TeacherCourse, StudentCourse, Student])],
+  imports: [TypeOrmModule.forFeature([Course, TeacherCourse, StudentCourse, Task, Teacher])],
   controllers: [CourseController],
   providers: [CourseService],
 })
