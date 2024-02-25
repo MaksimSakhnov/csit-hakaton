@@ -22,4 +22,22 @@
     justify-content: center;
     margin-bottom: 30px;
   }
+
+}
+
+.modal_task {
+  .attemp{
+    .status{
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+
+    .actions{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
 }
