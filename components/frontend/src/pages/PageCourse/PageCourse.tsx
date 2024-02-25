@@ -1,3 +1,5 @@
+import * as Diff2Html from 'diff2html';
+import 'diff2html/bundles/css/diff2html.min.css';
 import {Button, Divider, Input, Layout, List, Menu, MenuProps, Modal, theme, Typography} from "antd";
 import {
     ClockCircleTwoTone,
@@ -10,7 +12,7 @@ import {
     UserOutlined,
     WarningTwoTone
 } from "@ant-design/icons";
-import {createElement, useEffect, useState} from "react";
+import {createElement, useEffect, useRef, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {Content, Header} from "antd/es/layout/layout";
 import {useAppDispatch} from "../../store/hooks";
@@ -30,6 +32,7 @@ import Sider from "antd/es/layout/Sider";
 import {appActions} from "../../store/app/actions";
 import {appRole, ITask} from "../../store/app/appSlice.type";
 import TextArea from "antd/es/input/TextArea";
+import {Diff2HtmlUI} from "diff2html/lib/ui/js/diff2html-ui";
 
 const {Title, Text} = Typography;
 
@@ -126,7 +129,26 @@ export function PageCourse() {
     const [isOpenAModal, setIsOpenAModal] = useState<boolean>(false)
     const isLoading = useSelector(selectIsLoading)
     const isCorrectCollaborator = useSelector(selectIsCorrectCollaborator)
+    const ref = useRef()
 
+    useEffect(() => {
+        var targetElement = document.getElementById('myDiffElement');
+        const configuration = {
+            drawFileList: true,
+            fileListToggle: false,
+            fileListStartVisible: false,
+            fileContentToggle: false,
+            matching: 'lines',
+            outputFormat: 'side-by-side',
+            synchronisedScroll: true,
+            highlight: true,
+            renderNothingWhenEmpty: false,
+        };
+        // @ts-ignore
+        const diff2htmlUi = new Diff2HtmlUI(ref.current, patch, configuration);
+        diff2htmlUi.draw();
+        diff2htmlUi.highlightCode();
+    }, []);
 
     const {
         token: {colorBgContainer, borderRadiusLG},
@@ -388,6 +410,8 @@ export function PageCourse() {
 
 
         </Content>
+
+        <div id="myDiffElement" ref={ref}></div>
 
     </Layout>
 }
