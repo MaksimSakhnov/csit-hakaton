@@ -13,8 +13,21 @@ export class AttemptController {
   }
 
   @Get()
-  findAll(@Query('task_id') task_id?:number) {
+  findAll(@Query('task_id') task_id?: number) {
     return this.attemptService.findAll(task_id);
+  }
+
+  @Get(':id/commit')
+  getCommit(@Param('id') id: number) {
+    return this.attemptService.getCommit(+id);
+  }
+
+  @Get(':id/compare')
+  commitCompare(
+    @Param('id') id: number,
+    @Query('attempt_id') attempt_id: number
+  ) {
+    return this.attemptService.commitCompare(+id, attempt_id);
   }
 
   @Get(':id')

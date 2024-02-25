@@ -12,17 +12,20 @@ export class Attempt {
     @Column()
     gitLink: string
 
+    @Column({ nullable: true })
+    hashCommit: string
+
     @Column()
     timeSent: Date
 
-    @Column({nullable:true})
+    @Column({ nullable: true })
     timeChecked: Date
 
-    @ManyToOne((type) => Student, {eager:true})
+    @ManyToOne((type) => Student, { eager: true })
     @JoinColumn({ name: 'studentId' })
     student: Student
 
-    @ManyToOne((type) => Task, {eager:true})
+    @ManyToOne((type) => Task, { eager: true })
     @JoinColumn({ name: 'taskId' })
     task: Task
 
@@ -30,10 +33,10 @@ export class Attempt {
     @JoinColumn({ name: 'teacherId' })
     teacher: Teacher
 
-    @Column({nullable:true})
+    @Column({ nullable: true })
     points: number
 
-    @Column({nullable:true})
+    @Column({ nullable: true })
     review: string
 
     @Column()
