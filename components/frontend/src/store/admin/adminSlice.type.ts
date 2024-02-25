@@ -56,3 +56,16 @@ export interface ICreateCourse {
     repository: string;
     teachers: string;
 }
+
+export interface ILoginAdmin {
+    email: string;
+    password: string;
+    role: 'ADMINISTRATOR'
+}
+
+export interface ILoginAdminResponse {
+    firstName: string;
+    lastName: string;
+    email: string;
+    token: string;
+}

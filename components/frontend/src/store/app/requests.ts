@@ -27,7 +27,15 @@ const getCurrentCourse = createAsyncThunk(
 );
 
 
+const getStudentsForCourse = createAsyncThunk(
+    'admin/getStudentsForCourse',
+    async (courseId: number) => {
+        const data = await teacherApi.getStudentsForCourse(courseId)
+        return data
+    },
+);
 
 
 
-export {getCourses, getCurrentCourse}
+
+export {getCourses, getCurrentCourse, getStudentsForCourse}

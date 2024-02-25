@@ -12,8 +12,13 @@ function selectCoursessData(state: RootState){
     return state.admin.coursesData;
 }
 
+function selectAdminData(state: RootState){
+    return state.admin.adminData;
+}
+
 export {
     selectTeachersData,
     selectStudentssData,
-    selectCoursessData
+    selectCoursessData,
+    selectAdminData
 };

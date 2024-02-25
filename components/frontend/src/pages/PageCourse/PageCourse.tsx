@@ -1,26 +1,18 @@
-import {Button, Divider, Layout, Menu, MenuProps, theme, Typography} from "antd";
+import {Button, Divider, Layout, List, Menu, MenuProps, Modal, theme, Typography} from "antd";
 import {EditOutlined, EyeOutlined, LaptopOutlined, NotificationOutlined, UserOutlined} from "@ant-design/icons";
-import {createElement, useEffect} from "react";
+import {createElement, useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {Content, Header} from "antd/es/layout/layout";
 import {useAppDispatch} from "../../store/hooks";
-import {getCurrentCourse} from "../../store/app/requests";
+import {getCurrentCourse, getStudentsForCourse} from "../../store/app/requests";
 import {useSelector} from "react-redux";
-import {selectCurrentCourse} from "../../store/app/selectors";
+import {selectCurrentCourse, selectStudentsForCourse} from "../../store/app/selectors";
 import styles from './PageCourse.module.scss'
 import Sider from "antd/es/layout/Sider";
+import {appActions} from "../../store/app/actions";
 
 const {Title, Text} = Typography;
 
-
-const items1 = [
-    {
-        key: 'all',
-        label: (<Link to={'/'}>Назад</Link>),
-
-    },
-
-];
 
 const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
     (icon, index) => {
@@ -45,15 +37,32 @@ const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOu
 
 export function PageCourse() {
 
+    const dispatch = useAppDispatch()
+    const courseData = useSelector(selectCurrentCourse)
+    const studentsData = useSelector(selectStudentsForCourse)
+    const {id} = useParams();
+
+    const [isUsersModalOpen, setIsUsersModalOpen] = useState<boolean>(false)
+
     const {
         token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
+
+    const openUsersModal = () => {
+        dispatch(getStudentsForCourse(Number(id)))
+        setIsUsersModalOpen(true)
+    }
+
+    const closeUsersModal = () => {
+        dispatch(appActions.setStudents(null))
+        setIsUsersModalOpen(false)
+    }
 
     const subNavItems = [
         {
             key: 'people',
             icon: <UserOutlined/>,
-            label: 'Пользователи'
+            label: <Text onClick={openUsersModal}>Студенты</Text>,
         },
         {
             key: 'attempts',
@@ -62,9 +71,15 @@ export function PageCourse() {
         }
     ]
 
-    const dispatch = useAppDispatch()
-    const courseData = useSelector(selectCurrentCourse)
-    const {id} = useParams();
+    const items1 = [
+        {
+            key: 'all',
+            label: (<Link to={'/'} onClick={() => dispatch(appActions.setCourse(null))}>Назад</Link>),
+
+        },
+
+    ];
+
 
     useEffect(() => {
         if (id) {
@@ -73,8 +88,23 @@ export function PageCourse() {
     }, [id]);
 
     return <Layout style={{minHeight: '100vh', height: '100%'}}>
+
+        <Modal title="Basic Modal" open={isUsersModalOpen} onOk={closeUsersModal} onCancel={closeUsersModal}>
+            <List
+                itemLayout="horizontal"
+                dataSource={studentsData ?? undefined}
+                renderItem={(item) => (
+                    <List.Item>
+                        <List.Item.Meta
+                            title={item.firstName + ' ' + item.lastName}
+                            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                        />
+                    </List.Item>
+                )}
+            />
+        </Modal>
+
         <Header style={{display: 'flex', alignItems: 'center'}}>
-            <div className="demo-logo"/>
             <Menu
                 theme="dark"
                 mode="horizontal"
@@ -100,15 +130,16 @@ export function PageCourse() {
                 {courseData &&
                     <div className={styles.course_info}>
                         <div className={styles.actions}>
-                            <Button type="primary" size={"small"} shape={'circle'} disabled={true}><EditOutlined/></Button>
+                            <Button type="primary" size={"small"} shape={'circle'}
+                                    disabled={true}><EditOutlined/></Button>
                         </div>
                         <div className={styles.content}>
                             <Title>{courseData.name}</Title>
-                            <Divider />
+                            <Divider/>
                             <Text>{courseData.description}</Text><br/>
                             <Text>Пароль: {courseData.description}</Text><br/>
                             <Text>Репозиторий: {courseData.repository}</Text><br/>
-                            <Divider >Задания</Divider>
+                            <Divider>Задания</Divider>
 
                         </div>
                     </div>

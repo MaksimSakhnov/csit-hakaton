@@ -12,8 +12,13 @@ function selectCurrentCourse(state: RootState){
     return state.app.currentCourse
 }
 
+function selectStudentsForCourse(state: RootState){
+    return state.app.studentsForCourse;
+}
+
 export {
     selectRole,
     selectCourses,
-    selectCurrentCourse
+    selectCurrentCourse,
+    selectStudentsForCourse
 };

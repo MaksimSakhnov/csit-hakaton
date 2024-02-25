@@ -3,10 +3,11 @@ import {
     ICourse,
     ICreateCourse,
     ICreateStudent,
-    ICreateTeacher,
+    ICreateTeacher, ILoginAdmin, ILoginAdminResponse,
     IStudent,
     ITeacher
 } from "../store/admin/adminSlice.type"
+import {IUser, IUserLoginData} from "../types/userTypes";
 
 export const AdminApi = {
     async getTeachers() {
@@ -38,6 +39,11 @@ export const AdminApi = {
     async postCources(data: ICreateCourse) {
         const response = await instance.post<ICreateCourse>("courses", data);
         return response.data;
+    },
+
+    async login(userData: ILoginAdmin) {
+        const { data } = await instance.post<ILoginAdminResponse>('auth/login', userData)
+        return data
     },
 
 };
