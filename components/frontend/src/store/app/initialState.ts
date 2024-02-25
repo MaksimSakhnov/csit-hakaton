@@ -1,4 +1,4 @@
-import {appRole, IDetailCourse} from "./appSlice.type";
+import {appRole, IDetailCourse, ITask} from "./appSlice.type";
 import {ICourse, ILoginAdminResponse, IStudent} from "../admin/adminSlice.type";
 
 
@@ -7,4 +7,6 @@ export const appInitialState = {
     coursesData: [] as ICourse[],
     currentCourse: null as null | IDetailCourse,
     studentsForCourse: null as null | IStudent[],
+    tasksForCourse: null as null | ITask[],
+
 }

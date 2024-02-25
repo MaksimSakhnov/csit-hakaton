@@ -1,12 +1,12 @@
 import {Button, Divider, Layout, List, Menu, MenuProps, Modal, theme, Typography} from "antd";
-import {EditOutlined, EyeOutlined, LaptopOutlined, NotificationOutlined, UserOutlined} from "@ant-design/icons";
+import {EditOutlined, EyeOutlined, FileOutlined, LaptopOutlined, NotificationOutlined, UserOutlined} from "@ant-design/icons";
 import {createElement, useEffect, useState} from "react";
 import {Link, useParams} from "react-router-dom";
 import {Content, Header} from "antd/es/layout/layout";
 import {useAppDispatch} from "../../store/hooks";
-import {getCurrentCourse, getStudentsForCourse} from "../../store/app/requests";
+import {getCurrentCourse, getStudentsForCourse, getTasksForCourse} from "../../store/app/requests";
 import {useSelector} from "react-redux";
-import {selectCurrentCourse, selectStudentsForCourse} from "../../store/app/selectors";
+import {selectCurrentCourse, selectStudentsForCourse, selectTasksForCourse} from "../../store/app/selectors";
 import styles from './PageCourse.module.scss'
 import Sider from "antd/es/layout/Sider";
 import {appActions} from "../../store/app/actions";
@@ -40,6 +40,7 @@ export function PageCourse() {
     const dispatch = useAppDispatch()
     const courseData = useSelector(selectCurrentCourse)
     const studentsData = useSelector(selectStudentsForCourse)
+    const tasks = useSelector(selectTasksForCourse)
     const {id} = useParams();
 
     const [isUsersModalOpen, setIsUsersModalOpen] = useState<boolean>(false)
@@ -84,6 +85,7 @@ export function PageCourse() {
     useEffect(() => {
         if (id) {
             dispatch(getCurrentCourse(Number(id)))
+            dispatch(getTasksForCourse(Number(id)))
         }
     }, [id]);
 
@@ -97,7 +99,7 @@ export function PageCourse() {
                     <List.Item>
                         <List.Item.Meta
                             title={item.firstName + ' ' + item.lastName}
-                            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+                            description={item.department + ' ' + item.group}
                         />
                     </List.Item>
                 )}
@@ -140,6 +142,20 @@ export function PageCourse() {
                             <Text>Пароль: {courseData.description}</Text><br/>
                             <Text>Репозиторий: {courseData.repository}</Text><br/>
                             <Divider>Задания</Divider>
+
+                            <List
+                                itemLayout="horizontal"
+                                dataSource={tasks ?? undefined}
+                                renderItem={(item) => (
+                                    <List.Item>
+                                        <List.Item.Meta
+                                            avatar={<FileOutlined />}
+                                            title={<Link to={`/tasks/${item.id}`}>{item.name + ' ' + item.max_points + ' баллов'}</Link>}
+                                            description={item.description.substring(0, 20) + '...'}
+                                        />
+                                    </List.Item>
+                                )}
+                            />
 
                         </div>
                     </div>
