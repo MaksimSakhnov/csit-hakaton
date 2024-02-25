@@ -49,14 +49,14 @@ export class StudentService {
     const octokit = new Octokit({ auth: MasterAccountToken });
 
     try {
-      const res = await octokit.request('GET /repos/{owner}/{repo}/commits', {
+      const res = await octokit.request('GET /repos/{owner}/{repo}', {
         owner: userHandle,
         repo: repositoryName,
       })
 
       return true
     } catch (error) {
-      throw new BadRequestException(repositoryName)
+      throw new BadRequestException('Collaborator not found your repository')
     }
   }
 

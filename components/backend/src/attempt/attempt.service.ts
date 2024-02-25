@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAttemptDto } from './dto/create-attempt.dto';
 import { UpdateAttemptDto } from './dto/update-attempt.dto';
 import { Attempt } from './entities/attempt.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Octokit } from 'octokit';
+import { MasterAccountToken } from 'src/constants/masterAccount';
 
 @Injectable()
 export class AttemptService {
@@ -14,29 +16,94 @@ export class AttemptService {
 
   public async create(createAttemptDto: CreateAttemptDto) {
     const newAttempt = this.attemptRepository.create(createAttemptDto)
-    const id = (await this.attemptRepository.save({...newAttempt, 
-      task:{id:createAttemptDto.taskId}, student:{id:createAttemptDto.studentId}})).id
+    const id = (await this.attemptRepository.save({
+      ...newAttempt,
+      task: { id: createAttemptDto.taskId }, student: { id: createAttemptDto.studentId }
+    })).id
     return await this.attemptRepository.findOne({
-    where: {id: id}})
+      where: { id: id }
+    })
   }
 
-  async findAll(task_id: number){
-    return await this.attemptRepository.find({where:{task:{id:task_id}}, 
-      relations:{student:true, task:true}});
+  async getCommit(id: number) {
+    const attempt = await this.attemptRepository.findOne({ where: { id } })
+    const user = attempt.student
+    const task = attempt.task
+    const course = task.course
+
+    const userHandle = user.gitHandle
+    const repositoryName = course.name
+    const taskName = task.name
+    const octokit = new Octokit({ auth: MasterAccountToken });
+
+    try {
+      const res = await octokit.request('GET /repos/{owner}/{repo}/commits/{branch}', {
+        owner: userHandle,
+        repo: repositoryName,
+        branch: taskName,
+      })
+
+      const hashCommit = await res.data.sha
+
+      await this.attemptRepository.update({ id }, { hashCommit: hashCommit })
+      return await this.attemptRepository.findOne({
+        where: { id }
+      })
+    } catch (error) {
+      throw new BadRequestException('Collaborator not found repository or branch')
+    }
+  }
+
+  async commitCompare(id: number, attempt_id: number) {
+    const attempt1 = await this.attemptRepository.findOne({ where: { id } })
+    const attempt2 = await this.attemptRepository.findOne({ where: { id: attempt_id } })
+
+    const hashCommit1 = attempt1.hashCommit
+    const hashCommit2 = attempt2.hashCommit
+
+    const user = attempt1.student
+    const task = attempt1.task
+    const course = task.course
+
+    const userHandle = user.gitHandle
+    const repositoryName = course.name
+    const octokit = new Octokit({ auth: MasterAccountToken });
+
+    try {
+      const res = await octokit.request('GET /repos/{owner}/{repo}/compare/{hash1}...{hash2}', {
+        owner: userHandle,
+        repo: repositoryName,
+        hash1: hashCommit1,
+        hash2: hashCommit2,
+      })
+
+      const hashCommit = await res.data.patch_url
+
+      return (await octokit.request(`GET ${hashCommit}`)).data
+    } catch (error) {
+      throw new BadRequestException('Collaborator not found repository or branch')
+    }
+  }
+
+  async findAll(task_id: number) {
+    return await this.attemptRepository.find({
+      where: { task: { id: task_id } },
+      relations: { student: true, task: true }
+    });
   }
 
   async findOne(id: number) {
     return await this.attemptRepository.findOne({
-      where: { id }
+      where: { id }, relations: { task: true, student: true }
     })
   }
 
   async update(id: number, updateAttemptDto: UpdateAttemptDto) {
-    const {timeChecked, review, points, status, teacherId} = updateAttemptDto
-    await this.attemptRepository.update({ id }, 
-      {timeChecked:timeChecked, review:review, points:points, status:status, teacher:{id:teacherId}})
+    const { timeChecked, review, points, status, teacherId } = updateAttemptDto
+    await this.attemptRepository.update({ id },
+      { timeChecked: timeChecked, review: review, points: points, status: status, teacher: { id: teacherId } })
     return await this.attemptRepository.findOne({
-      where: { id }, relations:{teacher:true}
+      where: { id }, relations: { teacher: true }
     })
   }
 
