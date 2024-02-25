@@ -1,1 +1,1 @@
-export const MasterAccountToken: string = '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'
+export const MasterAccountToken: string = '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'
