@@ -25,7 +25,9 @@ import { AttemptModule } from './attempt/attempt.module';
     CourseModule,
     UniversityModule,
     TaskModule,
-    TeacherCourseModule
+    TeacherCourseModule,
+    StudentCourseModule,
+    AttemptModule,
   ],
   controllers: [AppController],
   providers: [AppService],
