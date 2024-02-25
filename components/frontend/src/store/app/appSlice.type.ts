@@ -4,7 +4,7 @@ import {freeze} from "@reduxjs/toolkit";
 export enum appRole  {
     STUDENT = 'STUDENT',
     TEACHER = 'TEACHER',
-    ADMIN = 'ADMIN',
+    ADMIN = 'ADMINISTARTOR',
 }
 
 export interface ICourse {

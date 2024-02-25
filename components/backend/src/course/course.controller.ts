@@ -28,8 +28,9 @@ export class CourseController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string, @Query('teacher_id') teacher_id?: number) {
-    if (teacher_id) { return this.courseService.findOne(+id, teacher_id); }
+  findOne(@Param('id') id: string, @Query('user_id') user_id?: number,
+  @Query('role') role?:string) {
+    if (role) { return this.courseService.findMy(+id, user_id, role); }
     else { return this.courseService.findOne(+id); }
   }
 

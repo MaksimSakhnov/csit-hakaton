@@ -64,6 +64,7 @@ export interface ILoginAdmin {
 }
 
 export interface ILoginAdminResponse {
+    id: number;
     firstName: string;
     lastName: string;
     email: string;
