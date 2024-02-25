@@ -13,7 +13,7 @@ export class CourseController {
   }
 
   @Get()
-  findAll(@Query('') teacher_id?: number) {
+  findAll(@Query('teacher_id') teacher_id?: number) {
     if (teacher_id) {
       return this.courseService.findByTeacher(teacher_id);
     }
