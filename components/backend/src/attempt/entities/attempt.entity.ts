@@ -1,9 +1,8 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, ManyToMany, JoinTable, ManyToOne, JoinColumn } from "typeorm"
-import { Course } from "src/course/entities/course.entity"
-import { University } from "src/university/entities/university.entity";
 import { Task } from "src/task/entities/task.entity";
 import { Teacher } from "src/teacher/entities/teacher.entity";
 import { Student } from "src/student/entities/student.entity";
+import { Status } from "./types";
 
 @Entity('attempts')
 export class Attempt {
@@ -16,14 +15,14 @@ export class Attempt {
     @Column()
     timeSent: Date
 
-    @Column()
+    @Column({nullable:true})
     timeChecked: Date
 
-    @ManyToOne((type) => Student, (student) => student.attempts)
+    @ManyToOne((type) => Student, {eager:true})
     @JoinColumn({ name: 'studentId' })
     student: Student
 
-    @ManyToOne((type) => Task, (task) => task.attempts)
+    @ManyToOne((type) => Task, {eager:true})
     @JoinColumn({ name: 'taskId' })
     task: Task
 
@@ -31,18 +30,12 @@ export class Attempt {
     @JoinColumn({ name: 'teacherId' })
     teacher: Teacher
 
-    @Column()
+    @Column({nullable:true})
     points: number
 
-    @Column()
+    @Column({nullable:true})
     review: string
 
     @Column()
-    status: string
-
-    @CreateDateColumn()
-    createdAt: Date
-
-    @UpdateDateColumn()
-    updatedAt: Date
+    status: Status
 }

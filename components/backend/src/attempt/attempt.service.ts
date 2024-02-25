@@ -12,17 +12,21 @@ export class AttemptService {
     private readonly attemptRepository: Repository<Attempt>,
   ) { }
 
-  create(createAttemptDto: CreateAttemptDto) {
-    return 'This action adds a new attempt';
+  public async create(createAttemptDto: CreateAttemptDto) {
+    const newTask = this.attemptRepository.create(createAttemptDto)
+    const id = (await this.attemptRepository.save(newTask)).id
+    return await this.attemptRepository.findOne({
+    where: {id: id}})
   }
 
-  async findAll(): Promise<Attempt[]> {
-    return await this.attemptRepository.find();
+  async findAll(task_id: number){
+    return await this.attemptRepository.find({where:{task:{id:task_id}}, 
+      relations:{student:true, task:true}});
   }
 
   async findOne(id: number) {
     return await this.attemptRepository.findOne({
-      where: { id }
+      where: { id }, relations:{task:true, student:true}
     })
   }
 

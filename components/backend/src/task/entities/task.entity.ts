@@ -22,9 +22,10 @@ export class Task {
     max_points: number
 
     @OneToMany((type) => Attempt, (attempt) => attempt.task)
+    @JoinColumn({name:'id'})
     attempts?: Attempt[]
 
     @ManyToOne((type) => Course, { eager: true })
-    @JoinColumn({ name: "courseId" })
+    @JoinColumn({ name: 'courseId' })
     course: Course
 }

@@ -48,7 +48,8 @@ export class Student {
   @JoinColumn({ name: 'universityId' })
   university: University
 
-  @OneToMany((type) => Attempt, (attempt) => attempt.task)
+  @OneToMany((type) => Attempt, (attempt) => attempt.student)
+  @JoinColumn({name:'id'})
   attempts?: Attempt[]
 
   @CreateDateColumn()

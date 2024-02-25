@@ -1,4 +1,5 @@
-import { IsDate, IsNotEmpty, IsNumber, IsString } from "class-validator"
+import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from "class-validator"
+import { Status } from "../entities/types"
 
 export class CreateAttemptDto {
     @IsNotEmpty()
@@ -9,31 +10,22 @@ export class CreateAttemptDto {
     @IsDate()
     timeSent: Date
 
-    @IsNotEmpty()
     @IsDate()
     timeChecked: Date
 
-    @IsNotEmpty()
     @IsNumber()
-    student_id: number
+    studentId: number
 
-    @IsNotEmpty()
     @IsNumber()
-    task_id: number
+    taskId: number
 
-    @IsNotEmpty()
-    @IsNumber()
-    teacher_id: number
-
-    @IsNotEmpty()
     @IsNumber()
     points: number
 
-    @IsNotEmpty()
     @IsString()
     review: string
 
     @IsNotEmpty()
-    @IsString()
-    status: string
+    @IsEnum(Status)
+    status: Status
 }
