@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 export class StudentService {
   constructor(
     @InjectRepository(Student)
-    private readonly studentRepository: Repository<Student>,
+    private readonly studentRepository: Repository<Student>  
   ) { }
 
   async create(createStudentDto: CreateStudentDto) {

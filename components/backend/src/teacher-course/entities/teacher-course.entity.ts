@@ -14,7 +14,7 @@ export class TeacherCourse {
       () => Teacher,
       teacher => teacher.courses
     )
-    @JoinColumn([{ name: 'student_id', referencedColumnName: 'id' }])
+    @JoinColumn([{ name: 'teacher_id', referencedColumnName: 'id' }])
     teacher: Teacher[];
   
     @ManyToOne(

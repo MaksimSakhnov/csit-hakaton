@@ -11,6 +11,7 @@ import { CourseModule } from './course/course.module';
 import { UniversityModule } from './university/university.module';
 import { TaskModule } from './task/task.module';
 import { TeacherCourseModule } from './teacher-course/teacher-course.module';
+import { StudentCourseModule } from './student-course/student-course.module';
 import { AttemptModule } from './attempt/attempt.module';
 
 @Module({
@@ -24,8 +25,7 @@ import { AttemptModule } from './attempt/attempt.module';
     CourseModule,
     UniversityModule,
     TaskModule,
-    TeacherCourseModule,
-    AttemptModule
+    TeacherCourseModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,7 +4,7 @@ import {ICreateStudent} from "../../store/admin/adminSlice.type";
 export type CreateStudentModalProps = {
     register: UseFormRegister<ICreateStudent>;
     handleSubmit: UseFormHandleSubmit<ICreateStudent>;
-    onSubmit: () => void;
+    onSubmit: (data: ICreateStudent) => void;
     open: boolean;
     closeWindow: () => void
 

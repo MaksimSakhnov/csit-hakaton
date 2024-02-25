@@ -1,7 +1,12 @@
 import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons';
 import type {MenuProps} from 'antd';
-import {Layout, Menu, theme} from 'antd';
-import {createElement} from "react";
+import {Layout, List, Menu, theme} from 'antd';
+import {createElement, useEffect, useState} from "react";
+import {useAppDispatch} from "../../store/hooks";
+import {getCourses} from "../../store/app/requests";
+import {useSelector} from "react-redux";
+import {selectCourses} from "../../store/app/selectors";
+import { Link } from 'react-router-dom';
 
 const {Header, Content, Footer, Sider} = Layout;
 
@@ -42,14 +47,26 @@ export function PageMain() {
         token: {colorBgContainer, borderRadiusLG},
     } = theme.useToken();
 
+    const dispatch = useAppDispatch()
+    const coursesData = useSelector(selectCourses)
 
-    return <Layout style={{height: '100vh'}}>
+    const [page, setPage] = useState<'all' | 'my'>('all');
+
+    useEffect(() => {
+        if (page === 'all'){
+            dispatch(getCourses())
+        }
+    }, [page]);
+
+
+    return <Layout style={{minHeight: '100vh', height: '100%'}}>
         <Header style={{display: 'flex', alignItems: 'center'}}>
             <div className="demo-logo"/>
             <Menu
                 theme="dark"
                 mode="horizontal"
-                defaultSelectedKeys={['2']}
+                selectedKeys={[page]}
+                onSelect={({key})=> setPage(key as 'all' | 'my')}
                 items={items1}
                 style={{flex: 1, minWidth: 0}}
             />
@@ -57,7 +74,7 @@ export function PageMain() {
         <Content style={{padding: '0 48px'}}>
 
             <Layout
-                style={{padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG, height: '90%'}}
+                style={{padding: '24px 0', background: colorBgContainer, borderRadius: borderRadiusLG, height: '100%'}}
             >
                 {/*<Sider style={{background: colorBgContainer}} width={200}>*/}
                 {/*    <Menu*/}
@@ -68,7 +85,20 @@ export function PageMain() {
                 {/*        items={items2}*/}
                 {/*    />*/}
                 {/*</Sider>*/}
-                <Content style={{padding: '0 24px', minHeight: 280}}>Content</Content>
+                <Content style={{padding: '0 24px', minHeight: 280}}>
+                    <List
+                        itemLayout="horizontal"
+                        dataSource={coursesData}
+                        renderItem={(item) => (
+                            <List.Item>
+                                <List.Item.Meta
+                                    title={<Link to={`/courses/${item.id}`}>{item.name}</Link>}
+                                    description={item.description}
+                                />
+                            </List.Item>
+                        )}
+                    />
+                </Content>
             </Layout>
         </Content>
 

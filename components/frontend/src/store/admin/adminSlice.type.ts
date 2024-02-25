@@ -4,7 +4,7 @@ export interface ITeacher {
     lastName: string;
     university: number;
     email: string;
-    gitHandler: string | null;
+    gitHandle: string | null;
     password: string;
 }
 
@@ -26,7 +26,7 @@ export interface ICreateStudent {
     department: string;
     group: number;
     email: string;
-    gitHandler: string;
+    gitHandle: string;
     password: string;
     university: number;
 }
@@ -36,7 +36,7 @@ export interface ICreateTeacher {
     lastName: string;
     university: number;
     email: string;
-    gitHandler: string | null;
+    gitHandle: string | null;
     password: string;
 }
 
