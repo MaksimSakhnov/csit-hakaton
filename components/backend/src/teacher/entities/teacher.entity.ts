@@ -24,7 +24,7 @@ export class Teacher {
     @Column()
     gitHandle: string
 
-    @OneToMany((type) => Attempt, (attempt) => attempt.task)
+    @OneToMany((type) => Attempt, (attempt) => attempt.task, {cascade:true})
     attempts?: Attempt[]
 
     @ManyToMany((type) => Course)
