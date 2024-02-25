@@ -48,8 +48,7 @@ export class Student {
   @JoinColumn({ name: 'universityId' })
   university: University
 
-  @OneToMany((type) => Attempt, (attempt) => attempt.student)
-  @JoinColumn({name:'id'})
+  @OneToMany((type) => Attempt, (attempt) => attempt.student, {cascade:true})
   attempts?: Attempt[]
 
   @CreateDateColumn()

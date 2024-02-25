@@ -20,6 +20,9 @@ export class CreateAttemptDto {
     taskId: number
 
     @IsNumber()
+    teacherId:number
+
+    @IsNumber()
     points: number
 
     @IsString()

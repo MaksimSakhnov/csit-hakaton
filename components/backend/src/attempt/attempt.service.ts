@@ -13,8 +13,9 @@ export class AttemptService {
   ) { }
 
   public async create(createAttemptDto: CreateAttemptDto) {
-    const newTask = this.attemptRepository.create(createAttemptDto)
-    const id = (await this.attemptRepository.save(newTask)).id
+    const newAttempt = this.attemptRepository.create(createAttemptDto)
+    const id = (await this.attemptRepository.save({...newAttempt, 
+      task:{id:createAttemptDto.taskId}, student:{id:createAttemptDto.studentId}})).id
     return await this.attemptRepository.findOne({
     where: {id: id}})
   }
@@ -26,14 +27,16 @@ export class AttemptService {
 
   async findOne(id: number) {
     return await this.attemptRepository.findOne({
-      where: { id }, relations:{task:true, student:true}
+      where: { id }
     })
   }
 
   async update(id: number, updateAttemptDto: UpdateAttemptDto) {
-    await this.attemptRepository.update({ id }, updateAttemptDto)
+    const {timeChecked, review, points, status, teacherId} = updateAttemptDto
+    await this.attemptRepository.update({ id }, 
+      {timeChecked:timeChecked, review:review, points:points, status:status, teacher:{id:teacherId}})
     return await this.attemptRepository.findOne({
-      where: { id }
+      where: { id }, relations:{teacher:true}
     })
   }
 
