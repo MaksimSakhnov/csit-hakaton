@@ -45,7 +45,7 @@ export class StudentService {
     })
 
     const userHandle = user.gitHandle
-    const repositoryName = course.name
+    const repositoryName = course.repository
     const octokit = new Octokit({ auth: MasterAccountToken });
 
     try {

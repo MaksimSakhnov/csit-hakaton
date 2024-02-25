@@ -32,7 +32,7 @@ export class AttemptService {
     const course = task.course
 
     const userHandle = user.gitHandle
-    const repositoryName = course.name
+    const repositoryName = course.repository
     const taskName = task.name
     const octokit = new Octokit({ auth: MasterAccountToken });
 
@@ -66,7 +66,7 @@ export class AttemptService {
     const course = task.course
 
     const userHandle = user.gitHandle
-    const repositoryName = course.name
+    const repositoryName = course.repository
     const octokit = new Octokit({ auth: MasterAccountToken });
 
     try {
