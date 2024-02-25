@@ -24,9 +24,9 @@ function App() {
         if(path === '/admin'){
 
             const adminData = localStorage.getItem('adminData')
-            if(adminData){
+            if(adminData && !adminStoreData){
                 // @ts-ignore
-                dispatch(adminActions.setAdminData(adminData))
+                dispatch(adminActions.setAdminData(JSON.parse(adminData)))
             }
             else{
                 if(adminStoreData){

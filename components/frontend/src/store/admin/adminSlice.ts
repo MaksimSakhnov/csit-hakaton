@@ -17,8 +17,8 @@ const adminSlice = createSlice({
     name: 'admin',
     initialState: adminInitialState,
     reducers: {
-        setAdminData: (state, action: PayloadAction<ILoginAdminResponse>)=>{
-
+        setAdminData: (state, action: PayloadAction<ILoginAdminResponse | null>)=>{
+            state.adminData = action.payload;
         }
 
     },

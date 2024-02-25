@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit"
 import {appInitialState} from "./initialState";
-import {getCourses, getCurrentCourse, getStudentsForCourse} from "./requests";
+import {getCourses, getCurrentCourse, getStudentsForCourse, getTasksForCourse} from "./requests";
 import {appRole, IDetailCourse} from "./appSlice.type";
 import {IStudent} from "../admin/adminSlice.type";
 import {loginAdmin} from "../admin/requests";
@@ -30,6 +30,9 @@ const appSlice = createSlice({
         })
         builder.addCase(getStudentsForCourse.fulfilled, (state, action)=>{
             state.studentsForCourse = action.payload;
+        })
+        builder.addCase(getTasksForCourse.fulfilled, (state, action)=>{
+            state.tasksForCourse = action.payload;
         })
 
     }

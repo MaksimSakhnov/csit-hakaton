@@ -1,4 +1,4 @@
-import {PageAdmin} from "./PageAdmin.tsx";
+import {PageAdmin} from "./PageAdmin";
 
 
 export default PageAdmin;

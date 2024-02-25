@@ -1,4 +1,5 @@
 import {ITeacher} from "../admin/adminSlice.type";
+import {freeze} from "@reduxjs/toolkit";
 
 export enum appRole  {
     STUDENT = 'STUDENT',
@@ -25,4 +26,12 @@ export interface IDetailCourse{
     isMy?: boolean;
     tasks?: Array<any>
 
+}
+
+export interface ITask {
+    id: number,
+    name:string,
+    description: string,
+    due_date: string,
+    max_points: number,
 }

@@ -16,9 +16,14 @@ function selectStudentsForCourse(state: RootState){
     return state.app.studentsForCourse;
 }
 
+function selectTasksForCourse(state: RootState){
+    return state.app.tasksForCourse;
+}
+
 export {
     selectRole,
     selectCourses,
     selectCurrentCourse,
-    selectStudentsForCourse
+    selectStudentsForCourse,
+    selectTasksForCourse
 };

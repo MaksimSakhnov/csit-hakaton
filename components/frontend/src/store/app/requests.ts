@@ -5,7 +5,7 @@ import {teacherApi} from "../../api/teacherApi";
 
 
 const getCourses = createAsyncThunk(
-    'admin/getCourses',
+    'app/getCourses',
     async () => {
         const data = await teacherApi.getCourses()
         return data.map(el => {
@@ -19,7 +19,7 @@ const getCourses = createAsyncThunk(
 );
 
 const getCurrentCourse = createAsyncThunk(
-    'admin/getCurrentCourse',
+    'app/getCurrentCourse',
     async (courseId: number) => {
         const data = await teacherApi.getCurrentCourse(courseId)
         return data
@@ -28,7 +28,7 @@ const getCurrentCourse = createAsyncThunk(
 
 
 const getStudentsForCourse = createAsyncThunk(
-    'admin/getStudentsForCourse',
+    'app/getStudentsForCourse',
     async (courseId: number) => {
         const data = await teacherApi.getStudentsForCourse(courseId)
         return data
@@ -36,6 +36,13 @@ const getStudentsForCourse = createAsyncThunk(
 );
 
 
+const getTasksForCourse = createAsyncThunk(
+    'app/getTasksForCourse', async (courseId: number) => {
+        const data = await teacherApi.getTasksForCourse(courseId);
+        return data
+    }
+)
 
 
-export {getCourses, getCurrentCourse, getStudentsForCourse}
+
+export {getCourses, getCurrentCourse, getStudentsForCourse, getTasksForCourse}
